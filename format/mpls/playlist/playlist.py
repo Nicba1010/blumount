@@ -3,6 +3,7 @@ from typing import IO, List
 from base import LoggingClass
 from utils.utils import read_u32, Endianess, read_u16, hex_log_str
 from .play_item import PlayItem
+from .sub_path import SubPath
 
 
 class PlayList(LoggingClass):
@@ -31,6 +32,6 @@ class PlayList(LoggingClass):
             self.play_items.append(PlayItem(f))
 
         self.sub_paths: List[SubPath] = list()
-        for index in range(self.number_of_play_items):
+        for index in range(self.number_of_sub_paths):
             self.logger.debug(f"Reading Sub Path {index}")
             self.sub_paths.append(SubPath(f))

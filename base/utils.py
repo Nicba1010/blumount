@@ -32,6 +32,9 @@ def _generatemetaclass(bases, metas, priority):
     return metadic.setdefault(metabases, meta)
 
 
+def get_flag(flags: int, index: int) -> bool:
+    return (flags & ((0b1 << flags.bit_length()) >> index)) > 1
+
 def classmaker(*metas, **options):
     """Class factory avoiding metatype conflicts. The invocation syntax is
     makecls(M1,M2,..,priority=1)(name,bases,dic). If the base classes have

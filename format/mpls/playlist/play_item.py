@@ -2,8 +2,9 @@ from typing import IO, List
 
 from base import LoggingClass
 from utils.utils import read_u32, Endianess, read_u16, hex_log_str, read_u8
-from .multi_clip_entries import MultiClipEntries
+from .multi_angle_entries import MultiAngleEntries
 from .stn_table import StnTable
+from .u0_mask_table import U0MaskTable
 
 
 class PlayItem(LoggingClass):
@@ -21,7 +22,7 @@ class PlayItem(LoggingClass):
         self.logger.debug(f"Clip Information File Name: {self.clip_information_file_name}")
 
         self.clip_codec_identifier: str = f.read(4).decode("ASCII")
-        self.logger.debug(f"Clip Codec Identifier: {self.clip_information_file_name}")
+        self.logger.debug(f"Clip Codec Identifier: {self.clip_codec_identifier}")
 
         self.flags_1: bytes = f.read(2)
         self.logger.debug(f"Flags 1: {hex_log_str(self.flags_1)}")
@@ -41,8 +42,7 @@ class PlayItem(LoggingClass):
         self.out_time: int = read_u32(f, endianess=Endianess.BIG_ENDIAN)
         self.logger.debug(f"Out Time: {self.out_time}")
 
-        self.u0_mask_table: bytes = f.read(10)
-        self.logger.debug(f"U0 Mask Table: {hex_log_str(self.u0_mask_table)}")
+        self.u0_mask_table: U0MaskTable = U0MaskTable(f)
 
         self.flags_2: bytes = f.read(1)
         self.logger.debug(f"Flags 2: {hex_log_str(self.flags_2)}")
@@ -61,7 +61,7 @@ class PlayItem(LoggingClass):
             self.logger.debug(f"Reserved: {hex_log_str(self.reserved)}")
 
         if self.is_multi_angle:
-            self.multi_clip_entries: MultiClipEntries = MultiClipEntries(f)
+            self.multi_angle_entries: MultiAngleEntries = MultiAngleEntries(f)
 
         self.stn_table: StnTable = StnTable(f)
 
@@ -70,7 +70,7 @@ class PlayItem(LoggingClass):
         return [self.clip_information_file_name] + [
             x.clip_information_file_name
             for x
-            in self.multi_clip_entries.angles
+            in self.multi_angle_entries.angles
         ]
 
     @property
@@ -78,7 +78,7 @@ class PlayItem(LoggingClass):
         return [self.clip_codec_identifier] + [
             x.clip_codec_identifier
             for x
-            in self.multi_clip_entries.angles
+            in self.multi_angle_entries.angles
         ]
 
     @property
@@ -86,5 +86,5 @@ class PlayItem(LoggingClass):
         return [self.ref_to_stc_id] + [
             x.ref_to_stc_id
             for x
-            in self.multi_clip_entries.angles
+            in self.multi_angle_entries.angles
         ]

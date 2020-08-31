@@ -37,10 +37,13 @@ class StnTable(LoggingClass):
         self.num_secondary_video: int = read_u8(f, endianess=Endianess.BIG_ENDIAN)
         self.logger.debug(f"Number of Secondary Video Streams: {self.num_secondary_video}")
 
-        self.num_pip_pg: int = read_u8(f, endianess=Endianess.BIG_ENDIAN)
-        self.logger.debug(f"Number of PIP PG Streams: {self.num_pip_pg}")
+        self.num_secondary_pg: int = read_u8(f, endianess=Endianess.BIG_ENDIAN)
+        self.logger.debug(f"Number of Secondary PG Streams: {self.num_secondary_pg}")
 
-        self.reserved_2: bytes = f.read(5)
+        self.num_dv: int = read_u8(f, endianess=Endianess.BIG_ENDIAN)
+        self.logger.debug(f"Number of DV Streams: {self.num_dv}")
+
+        self.reserved_2: bytes = f.read(4)
         self.logger.debug(f"Reserved 2: {hex_log_str(self.reserved_2)}")
 
         self.video_streams: List[Stream] = []
@@ -57,3 +60,28 @@ class StnTable(LoggingClass):
         for index in range(self.num_pg):
             self.logger.debug(f"Reading PG Stream {index}")
             self.pg_streams.append(Stream(f))
+
+        self.secondary_pg_streams: List[Stream] = []
+        for index in range(self.num_secondary_pg):
+            self.logger.debug(f"Reading Secondary PG Stream {index}")
+            self.secondary_pg_streams.append(Stream(f))
+
+        self.ig_streams: List[Stream] = []
+        for index in range(self.num_ig):
+            self.logger.debug(f"Reading IG Stream {index}")
+            self.ig_streams.append(Stream(f))
+
+        self.secondary_audio_streams: List[Stream] = []
+        for index in range(self.num_secondary_audio):
+            self.logger.debug(f"Reading Secondary Audio Stream {index}")
+            self.secondary_audio_streams.append(Stream(f))
+
+        self.secondary_video_streams: List[Stream] = []
+        for index in range(self.num_secondary_video):
+            self.logger.debug(f"Reading Secondary Video Stream {index}")
+            self.secondary_video_streams.append(Stream(f))
+
+        self.dv_streams: List[Stream] = []
+        for index in range(self.num_dv):
+            self.logger.debug(f"Reading DV Stream {index}")
+            self.dv_streams.append(Stream(f))
