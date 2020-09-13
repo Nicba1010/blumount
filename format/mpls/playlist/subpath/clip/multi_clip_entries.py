@@ -2,8 +2,7 @@ from typing import IO, List
 
 from base import LoggingClass
 from utils.utils import Endianess, read_u8
-from .angle import Angle
-from .clip import Clip
+from format.mpls.playlist.subpath.clip.clip import Clip
 
 
 class MultiClipEntries(LoggingClass):

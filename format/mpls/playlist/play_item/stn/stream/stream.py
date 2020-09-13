@@ -1,25 +1,25 @@
 from typing import IO
 
-from base import LoggingClass
-from utils.utils import Endianess, read_u16, read_u8, read_u32
-from .audio_format import AudioFormat
-from .character_code import CharacterCode
-from .coding_type import CodingType
-from .color_space import ColorSpace
-from .dynamic_range_type import DynamicRangeType
-from .frame_rate import FrameRate
-from .sample_rate import SampleRate
+from base.format_class import FormatClass
+from format.mpls.playlist.play_item.stn.stream.audio_format import AudioFormat
+from format.mpls.playlist.play_item.stn.stream.character_code import CharacterCode
+from format.mpls.playlist.play_item.stn.stream.coding_type import CodingType
+from format.mpls.playlist.play_item.stn.stream.color_space import ColorSpace
+from format.mpls.playlist.play_item.stn.stream.dynamic_range_type import DynamicRangeType
+from format.mpls.playlist.play_item.stn.stream.frame_rate import FrameRate
+from format.mpls.playlist.play_item.stn.stream.sample_rate import SampleRate
+from format.mpls.playlist.play_item.stn.stream.video_format import VideoFormat
+from utils.utils import Endianess, read_u16, read_u8
 from .stream_type import StreamType
-from .video_format import VideoFormat
 
 
-class Stream(LoggingClass):
+class Stream(FormatClass):
 
     def __init__(self, f: IO):
         """
         Init
         """
-        super().__init__()
+        super().__init__(f)
 
         self.length: int = read_u8(f, endianess=Endianess.BIG_ENDIAN)
         self.logger.debug(f"Length: {self.length}")
@@ -50,11 +50,8 @@ class Stream(LoggingClass):
             self.pid: int = read_u16(f, endianess=Endianess.BIG_ENDIAN)
             self.logger.debug(f"PID: {self.pid}")
 
-        self.logger.debug(
-            f"Seeking from {f.tell()} to "
-            f"current_position + length at {current_position + self.length}"
-        )
-        f.seek(current_position + self.length)
+        self.logger.debug(f"Seeking to current_position + length")
+        self.seek(current_position + self.length)
 
         self.attributes_length: int = read_u8(f, endianess=Endianess.BIG_ENDIAN)
         self.logger.debug(f"Attributes Length: {self.attributes_length}")
@@ -136,9 +133,5 @@ class Stream(LoggingClass):
             self.language: str = f.read(3).decode("ASCII")
             self.logger.debug(f"Language Code: {self.language}")
 
-
-        self.logger.debug(
-            f"Seeking from {f.tell()} to "
-            f"current_position + attributes_length at {current_position + self.attributes_length}"
-        )
-        f.seek(current_position + self.attributes_length)
+        self.logger.debug(f"Seeking to current_position + attributes_length")
+        self.seek(current_position + self.attributes_length)

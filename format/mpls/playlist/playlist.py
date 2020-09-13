@@ -3,10 +3,10 @@ from typing import IO, List
 from base import LoggingClass
 from utils.utils import read_u32, Endianess, read_u16, hex_log_str
 from .play_item import PlayItem
-from .sub_path import SubPath
+from format.mpls.playlist.subpath.sub_path import SubPath
 
 
-class PlayList(LoggingClass):
+class Playlist(LoggingClass):
 
     def __init__(self, f: IO):
         """

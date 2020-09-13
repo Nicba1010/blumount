@@ -4,10 +4,10 @@ from base import LoggingClass
 from base.utils import get_flag
 from utils.utils import Endianess, read_u8, read_u16, hex_log_str, read_u32
 from .playback_type import PlaybackType
-from .u0_mask_table import U0MaskTable
+from format.mpls.playlist.play_item.u0_mask_table import U0MaskTable
 
 
-class AppInfoPlayList(LoggingClass):
+class AppInfoPlaylist(LoggingClass):
 
     def __init__(self, f: IO):
         """

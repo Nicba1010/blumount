@@ -1,11 +1,9 @@
 from typing import IO, List
 
 from base import LoggingClass
-from utils.utils import read_u32, Endianess, read_u16, hex_log_str, read_u8
-from .multi_angle_entries import MultiAngleEntries
-from .stn_table import StnTable
-from ...index.indexes.sub_path_type import SubPathType
-from ...index.indexes.sub_play_item import SubPlayItem
+from utils.utils import read_u32, Endianess, hex_log_str, read_u8
+from format.mpls.playlist.subpath.sub_path_type import SubPathType
+from format.mpls.playlist.subpath.sub_play_item import SubPlayItem
 
 
 class SubPath(LoggingClass):

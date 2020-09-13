@@ -1,15 +1,16 @@
 import os
 from typing import IO, TypeVar, Generic, Type
 
-from .errors import EmptyFileException, InvalidFileHashException
+from .errors import EmptyFileException
+from .format_class import FormatClass
 from .header import MagicFileHeader
-from .logging_class import LoggingClass
 
 
-class FileFormat(LoggingClass):
+class FileFormat(FormatClass):
 
     def __init__(self, path: str):
-        super().__init__()
+        # noinspection PyTypeChecker
+        super().__init__(None)
 
         #: File Path
         self.path: str = path
@@ -19,7 +20,7 @@ class FileFormat(LoggingClass):
             raise EmptyFileException()
 
         #: File Handle
-        self.file_handle: IO = self.get_file_handle()
+        self.file_handle = self.get_file_handle()
 
     def get_file_handle(self) -> IO:
         return open(self.path, 'rb')

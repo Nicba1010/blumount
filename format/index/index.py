@@ -15,18 +15,12 @@ class Index(FileFormatWithMagic[IndexHeader]):
         )
         self.logger.debug(f"App Info BDMV: {hex_log_str(self.app_info_bdmv)}")
 
-        self.logger.debug(
-            f"Seeking from {self.file_handle.tell()} to "
-            f"indexes_start_address at {self.header.indexes_start_address}"
-        )
-        self.file_handle.seek(self.header.indexes_start_address)
+        self.logger.debug(f"Seeking to indexes_start_address")
+        self.seek(self.header.indexes_start_address)
 
         self.indexes: Indexes = Indexes(self.file_handle)
 
-        self.logger.debug(
-            f"Seeking from {self.file_handle.tell()} to "
-            f"extension_data_start_address at {self.header.extension_data_start_address}"
-        )
-        self.file_handle.seek(self.header.extension_data_start_address)
+        self.logger.debug(f"Seeking to extension_data_start_address")
+        self.seek(self.header.extension_data_start_address)
 
         self.extension_data: ExtensionData = ExtensionData(self.file_handle)
